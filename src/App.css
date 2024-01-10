@@ -1,0 +1,19 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6%;
+}
+button {
+    align-items: center;
+    background-color: blue;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+  }
