@@ -1,42 +1,71 @@
-import { useState, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './App.css'
 import { Movies} from './Components/movies.jsx'
 import {useMovies} from './Hooks/useMovies.js'
 
+function useSearch () {
+  const [search, setSearch] = useState('')
+  const [error, setError] = useState(null)
+  const isFirstInput = useRef(true)
+
+  useEffect(() => {
+    if (isFirstInput.current) {
+      isFirstInput.current = search === '' //cuando el search sea vacio, isFirst va a ser true, cuando search cambie sera false
+      return
+    }
+
+    if (search === '') {
+      setError('No se puede buscar una película vacía')
+      return
+    }
+
+    if (search.match(/^\d+$/)) {
+      setError('No se puede buscar una película con un número')
+      return
+    }
+
+    if (search.length < 3) {
+      setError('La búsqueda debe tener al menos 3 caracteres')
+      return
+    }
+
+    setError(null)
+  }, [search])
+
+  return { search, setSearch, error }
+}
+
 function App() {
-  const [titulomovie, setTituloMovie] = useState("")
-  //const [dataMovie, setDataMovieJson] = useState([])
   const{mappedMovies} = useMovies();
-  console.log(mappedMovies, "mapeado")
-  const bandera = useRef(true) 
+  const { search, setSearch, error } = useSearch()
  // let URL = "https://www.omdbapi.com/?apikey=4287ad07&s=" + titulomovie
 
-  const sendata = () =>{
-/*       event.preventDefault();
-      fetch(URL) //ya viene en json la respuesta
-      .then(res => (
-        res.json,
-         console.log("la res es", res))
-      ) 
-      
-      .then(data => setDataMovieJson(data)) */
-
-  }
-  const changetitulo = (e) =>{
-    setTituloMovie(e.target.value)
-    bandera.current = true
+const handleSubmit = (e) =>{
+  e.preventDefault() //evita que se recargue la página al usar los forms
+  console.log({search})
+}
+  const handleChangeSearch = (e) =>{
+    setSearch(e.target.value)
   }
   return (
     <>
       <div className='page'>
         <header>
           <h1>Buscador de peliculas</h1>
-          <form action="">
+          <form action="" onSubmit={handleSubmit}>  
             <label> Ingrese pelicula que desea buscar</label>
-            <input placeholder='Avengers,Start war, Barbie...'
-            onChange={changetitulo}/>
-            <button onClick={sendata}>Buscar</button>
-          </form>         
+            <input
+            style={{
+              border: '1px solid transparent',
+              borderColor: error ? 'red' : 'transparent'
+            }}
+            value={search} 
+            name='query'
+            placeholder='Avengers,Start war, Barbie...'
+            onChange={handleChangeSearch}/>
+            <button >Buscar</button>
+          </form>
+          {error && <p style={{ color: 'red' }}>{error}</p>}         
         </header>
         <main>
           <Movies movies= {mappedMovies}></Movies>

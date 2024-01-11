@@ -8,6 +8,5 @@ export function useMovies (){
         year: movie.Year,
         poster: movie.Poster
     }))
-    console.log("mapeado use es", mappedMovies)
     return{mappedMovies}
 }
