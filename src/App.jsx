@@ -32,17 +32,16 @@ function useSearch () {
     setError(null)
   }, [search])
 
-  return { search, setSearch, error }
+  return { search, setSearch, error, isFirstInput}
 }
 
 function App() {
-  const{mappedMovies} = useMovies();
-  const { search, setSearch, error } = useSearch()
- // let URL = "https://www.omdbapi.com/?apikey=4287ad07&s=" + titulomovie
+  const { search, setSearch, error, isFirstInput} = useSearch() 
+  const{mappedMovies, getMovies} = useMovies({search});
 
 const handleSubmit = (e) =>{
   e.preventDefault() //evita que se recargue la página al usar los forms
-  console.log({search})
+  getMovies();
 }
   const handleChangeSearch = (e) =>{
     setSearch(e.target.value)
@@ -68,7 +67,7 @@ const handleSubmit = (e) =>{
           {error && <p style={{ color: 'red' }}>{error}</p>}         
         </header>
         <main>
-          <Movies movies= {mappedMovies}></Movies>
+          <Movies movies= {mappedMovies} isfirst ={ isFirstInput}></Movies>
         </main>
       </div>
     </>

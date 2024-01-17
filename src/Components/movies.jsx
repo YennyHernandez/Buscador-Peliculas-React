@@ -14,9 +14,13 @@ function ListOfMovies ({ movies }) {
     )
   }
   
-  function NoMoviesResults () {
+  function NoMoviesResults (isFirst) {
     return (
-      <p>No se encontraron películas para esta búsqueda</p>
+      !isFirst.current
+      ?<p>Debe realizar una busqueda</p>
+      :<p>No se encontraron películas para esta búsqueda</p>
+      
+      
     )
   }
   
