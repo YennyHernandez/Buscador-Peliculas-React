@@ -35,14 +35,18 @@ function useSearch () {
   return { search, setSearch, error, isFirstInput}
 }
 
-function App() {
+function App() {  
+  const [sort, setSort] = useState(false)
   const { search, setSearch, error, isFirstInput} = useSearch() 
-  const{mappedMovies, getMovies} = useMovies({search});
+  const {movies, getMovies} = useMovies({search,sort});
 
-const handleSubmit = (e) =>{
-  e.preventDefault() //evita que se recargue la página al usar los forms
-  getMovies();
-}
+  const handleSort = () =>{
+    setSort(!sort)
+  }
+  const handleSubmit = (e) =>{
+    e.preventDefault() //evita que se recargue la página al usar los forms
+    getMovies();
+  }
   const handleChangeSearch = (e) =>{
     setSearch(e.target.value)
   }
@@ -62,12 +66,13 @@ const handleSubmit = (e) =>{
             name='query'
             placeholder='Avengers,Start war, Barbie...'
             onChange={handleChangeSearch}/>
+            <input type="checkbox" onChange={handleSort} checked= {sort} />
             <button >Buscar</button>
           </form>
           {error && <p style={{ color: 'red' }}>{error}</p>}         
         </header>
         <main>
-          <Movies movies= {mappedMovies} isfirst ={ isFirstInput}></Movies>
+          <Movies movies= {movies} isfirst ={ isFirstInput}></Movies>
         </main>
       </div>
     </>

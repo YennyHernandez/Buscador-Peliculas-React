@@ -1,11 +1,11 @@
 import datajson from '../mocks/result.json'
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import nodatamoviejson from '../mocks/noresult.json'
 
-export function useMovies ({search}){
+export function useMovies ({search, sort}){
     const [responseMovie, setResponseMovie] = useState([])
     const previuSearch = useRef("")
-    const movies = responseMovie.Search
+    const movies = responseMovie.Search || []
     const mappedMovies = movies?.map(movie => ({
         id: movie.imdbID,
         title: movie.Title,
@@ -27,5 +27,13 @@ export function useMovies ({search}){
             setResponseMovie(nodatamoviejson)
         }
     }
-    return{mappedMovies,getMovies}
+    const sortedMovies = useMemo(()=>{
+        console.log("entraaa usememo")
+        return sort 
+        ? [...mappedMovies].sort((a, b) => a.title.localeCompare(b.title))
+        : mappedMovies
+    
+    },[sort,responseMovie])
+    console.log("entraaa a usemovies normal")
+    return{movies: sortedMovies,getMovies}   
 }
