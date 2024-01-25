@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import './App.css'
 import { Movies} from './Components/movies.jsx'
 import {useMovies} from './Hooks/useMovies.js'
+import debounce from 'just-debounce-it'
 
 function useSearch () {
   const [search, setSearch] = useState('')
@@ -43,12 +44,20 @@ function App() {
   const handleSort = () =>{
     setSort(!sort)
   }
+  const debounceGetMovies = useCallback(
+    debounce(search => {
+      getMovies({search})
+    }, 2000) 
+    ,[getMovies]
+  )
   const handleSubmit = (e) =>{
     e.preventDefault() //evita que se recargue la página al usar los forms
     getMovies();
   }
   const handleChangeSearch = (e) =>{
-    setSearch(e.target.value)
+    const newSearch = e.target.value
+    setSearch(newSearch)
+    debounceGetMovies(newSearch)
   }
   return (
     <>

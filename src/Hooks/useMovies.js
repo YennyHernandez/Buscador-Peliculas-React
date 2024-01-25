@@ -26,6 +26,7 @@ export function useMovies ({search, sort}){
         }else{
             setResponseMovie(nodatamoviejson)
         }
+        console.log("entraaa a usemovies normal")
     }
     const sortedMovies = useMemo(()=>{
         console.log("entraaa usememo")
@@ -34,6 +35,6 @@ export function useMovies ({search, sort}){
         : mappedMovies
     
     },[sort,responseMovie])
-    console.log("entraaa a usemovies normal")
+    
     return{movies: sortedMovies,getMovies}   
 }
